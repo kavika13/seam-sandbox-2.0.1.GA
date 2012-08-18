@@ -1,0 +1,18 @@
+# Generic
+*.iml
+*.class
+.classpath
+.externalToolBuilders
+.project
+.settings
+.checkstyle
+
+target/
+
+# /
+/.metadata
+/.idea
+
+# /src/main/filters/
+/src/main/filters/filter-dev.properties
+

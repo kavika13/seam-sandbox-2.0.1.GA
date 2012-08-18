@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>net.happypath</groupId>
+    <artifactId>seam-sandbox</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>seam-sandbox-ear</artifactId>
+  <name>${project.artifactId} : ${project.version}</name>
+  <description>The Seam sandbox application EAR module</description>
+  <packaging>ear</packaging>
+
+  <profiles>
+    <profile>
+      <id>env-dev</id>
+      <properties>
+        <env>dev</env>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>env-prod</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <env>prod</env>
+      </properties>
+    </profile>
+  </profiles>
+
+  <dependencies>
+    <!-- project modules -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${app.context}-war</artifactId>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${app.context}-ejb</artifactId>
+      <type>ejb</type>
+    </dependency>
+
+    <!-- seam -->
+    <dependency>
+      <groupId>org.jboss.seam</groupId>
+      <artifactId>jboss-seam</artifactId>
+      <type>ejb</type>
+      <exclusions>
+        <exclusion>
+          <groupId>jboss</groupId>
+          <artifactId>javassist</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.el</groupId>
+          <artifactId>el-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dom4j</groupId>
+          <artifactId>dom4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <!-- Note: Maven filter properties are ony visible to resources and can not be accessed from the POM -->
+    <filters>
+      <filter>../src/main/filters/filter-${env}.properties</filter>
+    </filters>
+
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <!-- Plugin to work around Maven filter properties not being accessible from the POM -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <files>
+                <file>${basedir}/../src/main/filters/filter-${env}.properties</file>
+              </files>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pre-clean</id>
+            <phase>pre-clean</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${basedir}/../src/main/filters/filter-${env}.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ear-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <finalName>${app.context}-ear</finalName>
+          <displayName>${app.display.name}</displayName>
+          <description>${app.description}</description>
+          <filtering>true</filtering>
+
+          <defaultLibBundleDir>lib/</defaultLibBundleDir>
+
+          <jboss>
+            <version>${as.version}</version>
+            <loader-repository>seam.jboss.org:loader=${app.context}-ear</loader-repository>
+          </jboss>
+
+          <archive>
+            <manifestEntries>
+              <Build-Date>${timestamp}</Build-Date>
+              <Build-Revision>${buildNumber}</Build-Revision>
+              <Mode>${env}</Mode>
+            </manifestEntries>
+          </archive>
+
+          <modules>
+            <webModule>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${app.context}-war</artifactId>
+              <contextRoot>/${app.web.context}</contextRoot>
+              <unpack>${app.unpack.modules}</unpack>
+            </webModule>
+
+            <ejbModule>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${app.context}-ejb</artifactId>
+              <unpack>${app.unpack.modules}</unpack>
+            </ejbModule>
+
+          </modules>
+        </configuration>
+      </plugin>
+
+      <!-- Include to deploy to application server during integration-test build phase -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jboss-maven-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

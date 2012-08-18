@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jboss.seam</groupId>
+    <artifactId>root</artifactId>
+    <version>2.0.1.GA</version>
+  </parent>
+
+  <groupId>net.happypath</groupId>
+  <artifactId>seam-sandbox</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>${project.artifactId} : ${project.version}</name>
+  <description>The Seam sandbox application</description>
+  <url>http://github/kavika13/seam-sandbox-2.0.1.GA</url>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>ejb</module>
+    <module>war</module>
+    <module>ear</module>
+  </modules>
+
+  <properties>
+    <env>dev</env>
+    <app>sandbox</app>
+
+    <app.context>seam-sandbox</app.context>
+    <app.web.context>${app.context}</app.web.context>
+    <app.display.name>Seam sandbox application</app.display.name>
+    <app.description>
+      The Seam sandbox application is a Maven multi module project
+      you can use as a template for your own JBoss Seam project
+    </app.description>
+    <app.jndi.pattern>${app.context}-ear/#{ejbName}/local</app.jndi.pattern> <!-- JBoss JNDI Pattern -->
+    <app.jndi.pattern.test>/${ejbName}/Local</app.jndi.pattern.test>         <!-- OpenEJB JNDI Pattern -->
+
+    <jdk.debug>true</jdk.debug>
+    <jdk.optimize>false</jdk.optimize>
+    <jdk.source>1.6</jdk.source>
+    <jdk.target>1.6</jdk.target>
+
+    <version.seam>2.0.1.GA</version.seam>
+    <version.testng>5.6</version.testng>
+    <version.testng.classifier>jdk15</version.testng.classifier>
+    <version.maven.resources.plugin>2.4.3</version.maven.resources.plugin>
+
+    <!--
+      Fix build warning: "Using platform encoding (...) to copy filtered resources, i.e. build is platform dependent
+      http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding
+    -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!--
+      Properties for production are located in src/main/filters/filter-prod.properties
+      Properties to be modified by developer are located in src/main/filters/filter-dev.properties
+
+      To set up your own dev profile:
+        * Copy filter-prod.properties to filter-dev.properties and add filter-dev.properties to svn:ignore
+        * Execute maven commands with the dev profile, e.g. mvn install -Penv-dev
+    -->
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${app.context}-ear</artifactId>
+        <version>${project.version}</version>
+        <type>ear</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${app.context}-war</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${app.context}-ejb</artifactId>
+        <version>${project.version}</version>
+        <type>ejb</type>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.seam</groupId>
+        <artifactId>jboss-seam</artifactId>
+        <version>${version.seam}</version>
+        <type>ejb</type>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <!--
+    Include testng dependency because exception thrown when no test cases are present
+    http://jira.codehaus.org/browse/SUREFIRE-300
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${version.testng}</version>
+      <scope>test</scope>
+      <classifier>${version.testng.classifier}</classifier>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <!-- Allow child projects to deploy to application server during integration-test build phase -->
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jboss-maven-plugin</artifactId>
+          <version>1.5.0</version>
+          <executions>
+            <execution>
+              <id>deploy-to-jboss-ear</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>hard-deploy</goal>
+              </goals>
+              <configuration>
+                <jbossHome>${as.home}</jbossHome>
+                <fileName>${project.build.directory}/${project.artifactId}.${project.packaging}</fileName>
+                <unpack>${app.unpack.modules}</unpack>
+              </configuration>
+            </execution>
+            <execution>
+              <id>deploy-to-jboss-ds-xml</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>hard-deploy</goal>
+              </goals>
+              <configuration>
+                <jbossHome>${as.home}</jbossHome>
+                <fileName>${project.build.outputDirectory}/${project.artifactId}-ds.xml</fileName>
+              </configuration>
+            </execution>
+            <execution>
+              <id>undeploy-from-jboss</id>
+              <phase>clean</phase>
+              <goals>
+                <goal>hard-undeploy</goal>
+              </goals>
+              <configuration>
+                <jbossHome>${as.home}</jbossHome>
+                <fileNames>
+                  <fileName>${project.build.directory}/${project.artifactId}.${project.packaging}</fileName>
+                  <fileName>${project.build.outputDirectory}/${project.artifactId}-ds.xml</fileName>
+                </fileNames>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- Specifying version because there is a resource filtering bug in default version (2.2) -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${version.maven.resources.plugin}</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <!-- Plugin to work around Maven filter properties not being accessible from the POM -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <files>
+                <file>src/main/filters/filter-${env}.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${jdk.source}</source>
+          <target>${jdk.target}</target>
+          <debug>${jdk.debug}</debug>
+          <optimize>${jdk.optimize}</optimize>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

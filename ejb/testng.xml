@@ -1,0 +1,20 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="SeamSandbox" verbose="2" parallel="false">
+
+  <!--
+  <test name="Authenticator">
+    <classes>
+      <class name="net.happypath.security.AuthenticatorTest"/>
+    </classes>
+  </test>
+
+  <test name="Bug">
+    <classes>
+      <class name="net.happypath.action.BugTest"/>
+    </classes>
+  </test>
+  -->
+	
+</suite>
+

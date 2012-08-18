@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence
+  xmlns="http://java.sun.com/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+  version="1.0">
+
+  <persistence-unit name="${pu.name}" transaction-type="JTA">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <jta-data-source>${pu.jta.data.source}</jta-data-source>
+
+    <properties>
+      <property name="hibernate.dialect" value="${pu.hibernate.dialect}"/>
+      <property name="hibernate.hbm2ddl.auto" value="${pu.hibernate.hbm2ddl.auto}"/>
+      <property name="hibernate.default_batch_fetch_size" value="${pu.hibernate.default_batch_fetch_size}"/>
+      <property name="hibernate.show_sql" value="${pu.hibernate.show_sql}"/>
+      <property name="hibernate.format_sql" value="true"/>
+
+      <!-- Encoding -->
+      <property name="hibernate.connection.useUnicode" value="true" />
+      <property name="hibernate.connection.characterEncoding" value="UTF-8" />
+    </properties>
+
+  </persistence-unit>
+
+</persistence>
