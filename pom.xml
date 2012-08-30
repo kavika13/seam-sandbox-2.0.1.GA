@@ -46,9 +46,11 @@
     <jdk.target>1.6</jdk.target>
 
     <version.seam>2.0.1.GA</version.seam>
-    <version.testng>5.6</version.testng>
+    <version.testng>5.7</version.testng>
     <version.testng.classifier>jdk15</version.testng.classifier>
+    <version.maven.help.plugin>2.1.1</version.maven.help.plugin>
     <version.maven.resources.plugin>2.4.3</version.maven.resources.plugin>
+    <version.maven.surefire.plugin>2.4</version.maven.surefire.plugin>
 
     <!--
       Fix build warning: "Using platform encoding (...) to copy filtered resources, i.e. build is platform dependent
@@ -112,8 +114,8 @@
 
   <build>
     <pluginManagement>
-      <!-- Allow child projects to deploy to application server during integration-test build phase -->
       <plugins>
+        <!-- Allow child projects to deploy to application server during integration-test build phase -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jboss-maven-plugin</artifactId>
@@ -158,6 +160,7 @@
             </execution>
           </executions>
         </plugin>
+
         <!-- Specifying version because there is a resource filtering bug in default version (2.2) -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -169,6 +172,23 @@
     </pluginManagement>
 
     <plugins>
+      <!-- Specify version of Maven help plugin.  Parent POM uses non-existent version -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-help-plugin</artifactId>
+        <version>${version.maven.help.plugin}</version>
+      </plugin>
+
+      <!--
+        Specify version of Maven surefire plugin.  Parent POM uses old version that breaks on test launch.
+        http://jira.codehaus.org/browse/SUREFIRE-59
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven.surefire.plugin}</version>
+      </plugin>
+
       <!-- Plugin to work around Maven filter properties not being accessible from the POM -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
