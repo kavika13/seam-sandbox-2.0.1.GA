@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Version;
 
 import org.jboss.seam.annotations.Name;
 
@@ -17,7 +18,7 @@ import org.jboss.seam.annotations.Name;
 public class PersonId implements Serializable
 {
     private Long id;
-    private UserNoInherit userNoInherit;
+    private long version;
 
     public PersonId()
     {
@@ -33,6 +34,14 @@ public class PersonId implements Serializable
     public void setId(Long id)
     {
         this.id = id;
+    }
+
+    @Version
+    public long getVersion() {
+        return version;
+    }
+    public void setVersion(long version) {
+        this.version = version;
     }
 }
 

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -26,6 +27,7 @@ public class UserNoInherit implements Serializable
 {
     private Long id;
     private PersonId personId = new PersonId();
+    private long version;
     private String username;
     private String name;
     private String password;
@@ -66,6 +68,16 @@ public class UserNoInherit implements Serializable
     public void setPersonId(PersonId personId)
     {
         this.personId = personId;
+    }
+
+    @Version
+    public long getVersion()
+    {
+        return version;
+    }
+    public void setVersion(long version)
+    {
+        this.version = version;
     }
 
     @NotNull
