@@ -3,7 +3,7 @@ package net.happypath;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
@@ -14,55 +14,44 @@ import org.jboss.seam.ScopeType;
 
 @Entity
 @Name("user")
-@Scope(ScopeType.SESSION)
-public class User implements Serializable
+@Scope(ScopeType.CONVERSATION)
+@PrimaryKeyJoinColumn(name = "person_Id")
+public class User extends Person
 {
-   private String username;
-   private String name;
-   private String password;
+    private String username;
+    private String password;
 
-   public User(String username, String name, String password)
-   {
-      this.name = name;
-      this.password = password;
-      this.username = username;
-   }
+    public User()
+    {
+    }
 
-   public User()
-   {
-   }
+    public User(String username, String name, String password)
+    {
+        super(name);
+        this.password = password;
+        this.username = username;
+    }
 
-   @Id
-   @NotNull
-   @Length(min=5, max=15)
-   public String getUsername()
-   {
-      return username;
-   }
-   public void setUsername(String username)
-   {
-      this.username = username;
-   }
+    @NotNull
+    @Length(min=5, max=15)
+    public String getUsername()
+    {
+        return username;
+    }
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
 
-   @NotNull
-   public String getName()
-   {
-      return name;
-   }
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-
-   @NotNull
-   @Length(min=5, max=15)
-   public String getPassword()
-   {
-      return password;
-   }
-   public void setPassword(String password)
-   {
-      this.password = password;
-   }
+    @NotNull
+    @Length(min=5, max=15)
+    public String getPassword()
+    {
+        return password;
+    }
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
 }
 
