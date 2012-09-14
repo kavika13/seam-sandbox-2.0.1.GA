@@ -19,26 +19,43 @@
   <packaging>war</packaging>
 
   <dependencies>
+    <!-- project modules -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${app.context}-ejb</artifactId>
       <type>ejb</type>
       <scope>provided</scope>
     </dependency>
+
+    <!-- UI dependencies -->
     <dependency>
       <groupId>org.jboss.seam</groupId>
       <artifactId>jboss-seam-ui</artifactId>
-      <exclusions>
-        <!-- already included at root of app -->
-        <exclusion>
-          <groupId>org.jboss.seam</groupId>
-          <artifactId>jboss-seam</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.sun.facelets</groupId>
       <artifactId>jsf-facelets</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.richfaces.ui</groupId>
+      <artifactId>richfaces-ui</artifactId>
+    </dependency>
+
+    <!-- transitive dependencies that have been provided elsewhere -->
+    <dependency>
+      <groupId>org.jboss.seam</groupId>
+      <artifactId>jboss-seam</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.faces</groupId>
+      <artifactId>jsf-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.faces</groupId>
+      <artifactId>jsf-impl</artifactId>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>
