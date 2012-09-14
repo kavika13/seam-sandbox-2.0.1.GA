@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:c="http://java.sun.com/jstl/core"
+      >
+<!-- Note: JSTL namespace changes in newer Facelets/JSTL versions - See: http://stackoverflow.com/questions/7593603 -->
+<head>
+  <title>#{messages.userListPageTitle}</title>
+  <link href="stylesheet/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+  <f:view>
+    <rich:dataTable value="#{userListController.users}" var="user">
+      <f:facet name="caption">
+        <h:outputText value="#{messages.userListTableCaption}"/>
+      </f:facet>
+      <f:facet name="header">
+        <h:outputText value="#{messages.userListTableHeader}"/>
+      </f:facet>
+      <c:forEach items="#{userListController.columns}" var="column">
+        <rich:column styleClass="#{userListController.getRowClasses(user)}">
+          <f:facet name="header">#{messages[column.headerLabelKey]}</f:facet>
+          <h:outputText value="#{column.getValue(user)}"/>
+          <f:facet name="footer">#{messages[column.headerLabelKey]}</f:facet>
+        </rich:column>
+      </c:forEach>
+      <f:facet name="footer">
+        <h:outputText value="#{messages.userListTableHeader}"/>
+      </f:facet>
+    </rich:dataTable>
+  </f:view>
+</body>
+</html>

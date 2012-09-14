@@ -36,7 +36,7 @@ public class RegisterAction implements Register
         {
             em.persist(user);
             log.info("Registered new user #{user.username}");
-            return "/registered.xhtml";
+            return "/userregistered.xhtml";
         }
         else
         {

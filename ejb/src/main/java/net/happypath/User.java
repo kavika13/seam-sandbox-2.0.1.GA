@@ -2,6 +2,8 @@ package net.happypath;
 
 import java.io.Serializable;
 
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -20,6 +22,7 @@ public class User implements Serializable
    private String username;
    private String name;
    private String password;
+   private Gender gender = Gender.Unspecified;
 
    public User(String username, String name, String password)
    {
@@ -64,5 +67,23 @@ public class User implements Serializable
    {
       this.password = password;
    }
-}
 
+   @NotNull
+   @Enumerated(EnumType.ORDINAL)
+   public Gender getGender()
+   {
+      return gender;
+   }
+   public void setGender(Gender gender)
+   {
+      this.gender = gender;
+   }
+
+   public enum Gender
+   {
+      Unspecified,
+      Male,
+      Female,
+      Other;
+   }
+}
