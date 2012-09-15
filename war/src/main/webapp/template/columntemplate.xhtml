@@ -1,0 +1,18 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:c="http://java.sun.com/jstl/core"
+  >
+  <!-- Note: Generic type isn't specified because that reflection information is erased at runtime -->
+  <c:if test="#{reflection.isAssignableFrom('net.happypath.StringColumn', column)}">
+    <h:outputText value="#{column.getValue(row)}"/>
+  </c:if>
+
+  <c:if test="#{reflection.isAssignableFrom('net.happypath.GenderColumn', column)}">
+    <c:set var="gender" value="#{column.getValue(row)}" scope="page" />
+    <h:outputText value="#{messages.femaleSymbol} " escape="false" rendered="#{gender == 'Female'}"/>
+    <h:outputText value="#{messages.maleSymbol} " escape="false" rendered="#{gender == 'Male'}"/>
+    <h:outputText value="#{gender}"/>
+  </c:if>
+</ui:composition>

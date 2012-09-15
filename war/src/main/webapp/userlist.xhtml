@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
       xmlns:c="http://java.sun.com/jstl/core"
       >
@@ -23,7 +24,10 @@
       <c:forEach items="#{userListController.columns}" var="column">
         <rich:column styleClass="#{userListController.getRowClasses(user)}">
           <f:facet name="header">#{messages[column.headerLabelKey]}</f:facet>
-          <h:outputText value="#{column.getValue(user)}"/>
+          <ui:include src="template/columntemplate.xhtml">
+            <ui:param name="column" value="#{column}"/>
+            <ui:param name="row" value="#{user}"/>
+          </ui:include>
           <f:facet name="footer">#{messages[column.headerLabelKey]}</f:facet>
         </rich:column>
       </c:forEach>

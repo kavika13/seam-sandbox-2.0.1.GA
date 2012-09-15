@@ -49,22 +49,19 @@ public class UserListControllerImplementation implements UserListController
         List<Column<User>> result = new ArrayList<Column<User>>();
 
         result.add(
-            new Column<User>()
+            new StringColumn<User>("usernameColumnHeader")
             {
-                public String getHeaderLabelKey() { return "usernameColumnHeader"; }
-                public Object getValue(User row) { return row.getUsername(); }
+                public String getValue(User row) { return row.getUsername(); }
             });
         result.add(
-            new Column<User>()
+            new StringColumn<User>("usernameColumnHeader")
             {
-                public String getHeaderLabelKey() { return "nameColumnHeader"; }
-                public Object getValue(User row) { return row.getName(); }
+                public String getValue(User row) { return row.getName(); }
             });
         result.add(
-            new Column<User>()
+            new GenderColumn<User>("genderColumnHeader")
             {
-                public String getHeaderLabelKey() { return "genderColumnHeader"; }
-                public Object getValue(User row) { return row.getGender().toString(); }
+                public User.Gender getValue(User row) { return row.getGender(); }
             });
 
         return result;
