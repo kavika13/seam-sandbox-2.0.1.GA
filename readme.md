@@ -7,11 +7,8 @@ Instructions to build:
 - Install [MySql Workbench](http://dev.mysql.com/downloads/workbench/5.2.html)
 - Install [MySql connector](http://dev.mysql.com/downloads/connector/j/) to `<jboss-root>/server/default/lib`
 - Create a `sandbox_db` schema in MySql
-- Set up the appropriate Maven repository configuration under `<user-profile>/.m2/settings.xml`
-  - Probably:
-     - http://repository.jboss.org/nexus/content/groups/public (plain)
-     - http://download.java.net/maven/2 (plain)
-     - http://repository.jboss.org/nexus/content/groups/public (plugins)
+- If necessary, set up the appropriate Maven repository configuration under `<user-profile>/.m2/settings.xml`
+  - Default repositories are configured in the root `pom.xml` file, but you can create mirrors to override them via mirrors in `settings.xml`
 - Install [GitHub for Windows](http://windows.github.com/) or [Git Extensions](http://code.google.com/p/gitextensions/)
 - Get [this source code](https://github.com/kavika13/seam-sandbox-2.0.1.GA)
 - Copy `<source-code-base>/src/main/filters/filter-prod.properties` to `filter-dev.properties` in the same directory
